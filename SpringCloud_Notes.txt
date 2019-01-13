@@ -1,0 +1,71 @@
+Check GitHub location:
+https://github.com/osmanddas/ConfigData.git
+
+- Read all the points very carefully. Do NOT leave any point.
+- No command line interface is required. All applications should be built and started through STS
+- User Run configurations both for Maven build (skip the tests) and for SpringBoot applications.
+
+Important thing about these lessons is how we are executing them with the given configurations.
+
+- lab-3-client, lab-3-server, and lab-4-eureka-server projects use only .yml files. 
+- This is intentional esp. in case of lab-4-eureka-server as we have multiple profile entries within the same file.
+	
+- All lab-4-<word> projects have properties files
+
+lab-3-client 
+============
+1. It requires GitHub files: lab-3-client.yml and lab-3-client-northamerica.yml.
+2. Check its bootstrap.yml file. The active profile (spring:profiles:active) is northamerica.
+3. This project connects to lab-3-server (check spring:cloud:config:url in bootstrap), which in turn
+	connects to GitHub.
+4. Lab3ClientApplication can be directly executed as spring-boot application without any jvm params
+
+lab-4-server (in default profile)
+=================================
+1. It connects to GitHub and runs at 8001
+2. It doesn't require any jvm params
+3. Check Users/mycompu/workspace_sts/lab-4-eureka-server/src/main/java/com/example/demo/Lab4EurekaServerApplication.java
+4. It defines various jvm args to start Eureka cluster
+
+lab-4-eureka-server
+====================
+1. The applicaiton.yml has multiple entries for various profiles. 
+2. Note that none of the profiles are active, we need to pass the active profile via jvm params
+3. Execute Lab4EurekaServerApplication with following jvm param: -Dspring.profiles.active=primary or
+	secondary, or tertiary
+4. NOTE: for running lab-3-client, eureka should be running with default profile.
+
+lab-4-<word> applications
+=========================
+1. All word (subject, sentence, verb, article, adjective) applications MUST be executed with and active profile.
+2. The bootstrap.properties has profile, but not active profile. 
+3. Either set it as spring.profiles.active (NOT as spring.profiles) or pass it via jvm params like
+4. -Dspring.profiles.active=article
+5. Note that lab-4-article has spring.profiles.active=article. 
+6. In fact it has .yml files where the profile is set as active profile and it runs without -Dspring.profiles.active jvm param.
+7. You may set the active profile in other word applications as well. You may change the .properties files to .yml
+
+lab-6
+======
+1. Requires you to run the config server - lab-3-server and the three (primary, secondary, and tertiary) instances of Eureka server (lab-4-eureka-server).
+2. lab-3-config server reads the config (application.yml) file through GitHub (ConfigData) repository. 
+3. The application.yml file in GitHub has all the required configurations for various spring.profiles, esp. for words (checkout the file)
+4. Eureka server instances will run with -Dspring.profiles.active=primary/secondary/tertiary jvm params. 
+5. In lab-6 there are two word applications 1) lab-6-sentence-1 & 2 2) lab-6-word
+6. lab-6-sentence-1 has refactored code, however it still uses RestTemplate to call services
+7. In lab-6-sentence-2, the code is further refactored and it uses feign i.e. declarative client calls (checkout the code, no RestTemplate anymore)
+8. Start the lab-6-sentence-1/2 with usual jvm spring profiles param -Dspring.profiles.current=sentance
+9. Start lab-6-word with five different profiles - adjective, article, subject, verb, noun
+
+lab-7
+=======
+1. follow points 1 to 4 from lab-6
+2. for words (noun, subject, verb, adjective, article) use the existing lab-6-word with -Dspring.profiles.active settings
+3. for sentence use lab-7-sentence-1 applications. It has a bit of refactored code, it also has dependencies for hystrix and hystrix dashboard
+4. check out the hystrix fallback methods in WordServiceImpl
+5. You need to understand Lambda, Executor, Executors, Observable (reactive) in order to understand this example... take a break now...
+
+
+
+
+
